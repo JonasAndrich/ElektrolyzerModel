@@ -28,6 +28,8 @@ ALPHAC = 0.5
 
 app = Dash(__name__)
 
+server = app.server
+
 app.layout = html.Div([
     html.H1(children='Polarisation Curve Simulation of PEM-Elektrolyzer',
             style={'width': '75%', 'margin': 25, 'textAlign': 'center', 'font-family': 'Arial'}),
