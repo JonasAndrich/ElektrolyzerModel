@@ -38,8 +38,8 @@ app.layout = html.Div([
         Vielen Dank für die Einladung. Falls Sie sich während des Gesprächs,
         die Zeit vertreiben möchten, finden Sie hier ein rudimentäres interaktives Modell zur 
         Berechnung der Polarisationskurve eines PEM-Elektrolyseurs.
-        Ändern sie mithilfe der Slider die Temperatur, den Wasser-Gehalt des Nafion 
-        oder die Nafion-Membran-Dicke und schauen, 
+        Ändern Sie mithilfe der Slider die Temperatur, den Wasser-Gehalt des Nafion 
+        oder die Nafion-Membran-Dicke und schauen Sie, 
         wie sich das auf die anteiligen Überspannungen auswirkt.
         ''',
              style={'width': '75%', 'margin': 25, 'textAlign': 'center', 'font-family': 'Arial'}),
