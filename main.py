@@ -35,7 +35,7 @@ app.layout = html.Div([
             style={'width': '75%', 'margin': 25, 'textAlign': 'center', 'font-family': 'Arial'}),
 
     html.Div(children='''
-        Vielen Dank für die Einladung, zum Bewerbungsgespräch. Falls Sie sich während des Gesprächs,
+        Vielen Dank für die Einladung. Falls Sie sich während des Gesprächs,
         die Zeit vertreiben möchten, finden Sie hier ein rudimentäres interaktives Modell zur 
         Berechnung der Polarisationskurve eines PEM-Elektrolyseurs.
         Ändern sie mithilfe der Slider die Temperature, den Wasser-Gehalt des Nafion 
