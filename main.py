@@ -4,12 +4,12 @@ import numpy as np
 
 # Definition von Konstanten als globale Variablen
 global F
-F = 96485.33289
+F = 96485.33289 # s A / mol
 global R
-R = 8.3144598
+R = 8.3144598 # J⋅K−1⋅mol−1
 # Raumtemperatur 25 °C
 global Tamb
-Tamb = 298.15
+Tamb = 298.15 #K
 
 '''
 Exchange Current Density and alpha values for Cathode and Anode from:
@@ -18,11 +18,11 @@ lation of high-pressure PEM electrolyzer system. Int. J. Hydrogen Energy 41,
 13901e13914. https://doi.org/10.1016/j.ijhydene.2016.06.022.
 '''
 global I0A
-I0A = 2e-07
+I0A = 2e-07 #A
 global ALPPHAA
 ALPPHAA = 2
 global I0C
-I0C = 2e-03
+I0C = 2e-03 #A
 global ALPHAC
 ALPHAC = 0.5
 
@@ -31,30 +31,33 @@ app = Dash(__name__)
 server = app.server
 
 app.layout = html.Div([
-    html.H1(children='Polarisation Curve Simulation of PEM-Elektrolyzer',
-            style={'width': '75%', 'margin': 25, 'textAlign': 'center', 'font-family': 'Arial'}),
+    html.H1(children='PEM-Electrolyzer Polarisation Curve Simulation',
+            style={'width': '75%', 'margin': 15, 'textAlign': 'left', 'font-family': 'Arial'}),
 
     html.Div(children='''
-        Vielen Dank für die Einladung. Falls Sie sich während des Gesprächs,
+        Vielen Dank für die Einladung. Falls Sie sich während des Gesprächs
         die Zeit vertreiben möchten, finden Sie hier ein rudimentäres interaktives Modell zur 
         Berechnung der Polarisationskurve eines PEM-Elektrolyseurs.
         Ändern Sie mithilfe der Slider die Temperatur, den Wasser-Gehalt des Nafion 
         oder die Nafion-Membran-Dicke und schauen Sie, 
-        wie sich das auf die anteiligen Überspannungen auswirkt.
+        wie sich das auf die anteiligen Überspannungen auswirkt. 
+        Die App wurde in Python geschrieben und nutzt die Module Dash und Numpy. Das Deployment erfolgte über 
+        Heroku und gunicorn als WSGI. Quellen und Link zum Source-Code finden Sie ganz unten. MFG Jonas Andrich
+         
         ''',
-             style={'width': '75%', 'margin': 25, 'textAlign': 'center', 'font-family': 'Arial'}),
+             style={'width': '75%', 'margin': 10, 'textAlign': 'left', 'font-family': 'Arial'}),
     html.Br(),
     dcc.Slider(
         273,
         398,
         step=None,
         marks={
-            298: '298K / 25°C',
-            323: '313K / 50°C',
-            353: '343K / 80°C',
-            383: '383K / 100°C'
+            298.15: '298.15K / 25°C',
+            323.15: '323.15K / 50°C',
+            353.15: '353.15K / 80°C',
+            373.15: '373.15K / 100°C'
         },
-        value=323,
+        value=323.15,
         id='temperature-slider',
     ),
     html.Br(),
@@ -63,10 +66,10 @@ app.layout = html.Div([
         1,
         step=None,
         marks={
-            0.1: '10 % Nafion \nWater Content',
-            0.3: '30 % Nafion \nWater Content',
-            0.5: '50 % Nafion \nWater Content',
-            0.7: '70 % Nafion \nWater Content'
+            0.1: '10 % Nafion Water Content',
+            0.3: '30 % Nafion Water Content',
+            0.5: '50 % Nafion Water Content',
+            0.7: '70 % Nafion Water Content'
         },
         value=.1,
         id='wetting-slider'
@@ -78,10 +81,10 @@ app.layout = html.Div([
 
         step=None,
         marks={
-            0.00001: '10 µm membrane \nthickness',
-            0.000100: '100 µm membrane \thickness',
-            0.000150: '150 µm membrane \nthickness',
-            0.00025: '250 µm membrane \nthickness'
+            0.00001: '10 µm Membrane Thickness',
+            0.000100: '100 µm Membrane Thickness',
+            0.000150: '150 µm Membrane Thickness',
+            0.00025: '250 µm Membrane Thickness'
         },
         value=.0001,
         id='membrane-thickness-slider'
@@ -90,6 +93,37 @@ app.layout = html.Div([
     html.Br(),
     dcc.Graph(id='graph-with-slider'),
     html.Br(),
+    dcc.Markdown('''
+            #### Quellen:
+            Falcão, D. S., & Pinto, A. M. F. R. (2020). A review on PEM Electrolyzer Modelling: guidelines for beginners. 
+            Journalof Cleaner Production, 121184. 
+            https://doi.org/10.1016/j.jclepro.2020.121184
+            
+            Folgado, F. J., González, I., & Calderón, A. J. (2022). Simulation platform for the assessment of 
+            PEM electrolyzer models oriented to implement digital Replicas. Energy Conversion and Management, 267, 115917.
+            https://doi.org/10.1016/j.enconman.2022.115917
+        
+            Yigit, T., Selamet, O.F. (2016). Mathematical modeling and dynamic Simulink simulation of high-pressure PEM 
+            electrolyzer system. Int. J. Hydrogen Energy 41,13901e13914. 
+            https://doi.org/10.1016/j.ijhydene.2016.06.022.
+            
+            
+            #### Source Code:
+            https://github.com/JonasAndrich/ElektrolyzerModel/blob/master/main.py
+            
+            ''', style={'width': '100%', 'margin': 0, 'textAlign': 'left', 'font-family': 'Arial'}
+                 ),
+
+
+    # html.A(
+    #     href ="https://en.wikipedia.org/wiki/Polymer_electrolyte_membrane_electrolysis",
+    #     children=[
+    #         html.Img(
+    #             alt="Scheme of PEM Water Electrolysis Cell from Wikipedia",
+    #             src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/PEMelectrolysis.jpg/220px-PEMelectrolysis.jpg",
+    #         )
+    #     ]
+    # )
 ])
 
 
@@ -101,11 +135,13 @@ app.layout = html.Div([
 )
 def update_figure(selected_temperature, selected_wetting, selected_thickness):
     # Über 0-3 Ampere/cm^2 eine Berechnung mit 0.1 Schritten
-    jarray = np.arange(0, 3, 0.02)
+    jarray = np.arange(0, 3, 0.01)
     Vohmicarray = ohmicpolarisation(jarray, selected_temperature, selected_wetting, selected_thickness)
     Vcellcarray = np.repeat(ecellvoltage(selected_temperature), jarray.size)
     activationpolarisationarray = activationpolarisation(jarray, selected_temperature)
     # do it like this: https://plotly.com/python/filled-area-plots/
+
+    # power = Ecell * i
 
     fig = px.area(x=jarray, y=[Vohmicarray, activationpolarisationarray, Vcellcarray, ])
     newnames = {"wide_variable_0": "V_ohmic",
