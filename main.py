@@ -35,14 +35,14 @@ app.layout = html.Div([
             style={'width': '75%', 'margin': 15, 'textAlign': 'left', 'font-family': 'Arial'}),
 
     html.Div(children='''
-        Vielen Dank für die Einladung. Falls Sie sich während des Gesprächs
-        die Zeit vertreiben möchten, finden Sie hier ein rudimentäres interaktives Modell zur 
+        Ein interaktives Modell zur 
         Berechnung der Polarisationskurve eines PEM-Elektrolyseurs.
         Ändern Sie mithilfe der Slider die Temperatur, den Wasser-Gehalt des Nafion 
         oder die Nafion-Membran-Dicke und schauen Sie, 
         wie sich das auf die anteiligen Überspannungen auswirkt. 
         Die App wurde in Python geschrieben und nutzt die Module Dash und Numpy. Das Deployment erfolgte über 
-        Heroku und gunicorn als WSGI. Quellen und Link zum Source-Code finden Sie ganz unten. MFG Jonas Andrich
+        Heroku und gunicorn als WSGI. Quellen und Link zum Source-Code finden Sie ganz unten. 
+        Jonas Andrich (2022)
          
         ''',
              style={'width': '75%', 'margin': 10, 'textAlign': 'left', 'font-family': 'Arial'}),
