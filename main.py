@@ -4,12 +4,12 @@ import numpy as np
 
 # Definition von Konstanten als globale Variablen
 global F
-F = 96485.33289 # s A / mol
+F = 96485.33289  # s A / mol
 global R
-R = 8.3144598 # J⋅K−1⋅mol−1
+R = 8.3144598  # J⋅K−1⋅mol−1
 # Raumtemperatur 25 °C
 global Tamb
-Tamb = 298.15 #K
+Tamb = 298.15  # K
 
 '''
 Exchange Current Density and alpha values for Cathode and Anode from:
@@ -18,11 +18,11 @@ lation of high-pressure PEM electrolyzer system. Int. J. Hydrogen Energy 41,
 13901e13914. https://doi.org/10.1016/j.ijhydene.2016.06.022.
 '''
 global I0A
-I0A = 2e-07 #A
+I0A = 2e-07  # A
 global ALPPHAA
 ALPPHAA = 2
 global I0C
-I0C = 2e-03 #A
+I0C = 2e-03  # A
 global ALPHAC
 ALPHAC = 0.5
 
@@ -93,15 +93,12 @@ app.layout = html.Div([
     html.Br(),
     dcc.Graph(id='graph-with-slider'),
     html.Br(),
-    dcc.Markdown('''
-            #### Quellen:
-            Falcão, D. S., & Pinto, A. M. F. R. (2020). A review on PEM Electrolyzer Modelling: guidelines for beginners. 
-            Journal of Cleaner Production, 121184. 
-            https://doi.org/10.1016/j.jclepro.2020.121184
+    dcc.Markdown('''#### Quellen: Falcão, D. S., & Pinto, A. M. F. R. (2020). A review on PEM Electrolyzer Modelling: 
+    guidelines for beginners. Journal of Cleaner Production, 121184. https://doi.org/10.1016/j.jclepro.2020.121184 
             
-            Folgado, F. J., González, I., & Calderón, A. J. (2022). Simulation platform for the assessment of 
-            PEM electrolyzer models oriented to implement digital Replicas. Energy Conversion and Management, 267, 115917.
-            https://doi.org/10.1016/j.enconman.2022.115917
+            Folgado, F. J., González, I., & Calderón, A. J. (2022). Simulation platform for the assessment of PEM 
+            electrolyzer models oriented to implement digital Replicas. Energy Conversion and Management, 267, 
+            115917. https://doi.org/10.1016/j.enconman.2022.115917 
         
             Yigit, T., Selamet, O.F. (2016). Mathematical modeling and dynamic Simulink simulation of high-pressure PEM 
             electrolyzer system. Int. J. Hydrogen Energy 41,13901e13914. 
@@ -120,11 +117,12 @@ app.layout = html.Div([
                  ),
 
     html.A(
-        href ="https://en.wikipedia.org/wiki/Polymer_electrolyte_membrane_electrolysis",
+        href="https://en.wikipedia.org/wiki/Polymer_electrolyte_membrane_electrolysis",
         children=[
             html.Img(
                 alt="Scheme of PEM Water Electrolysis Cell from Wikipedia",
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/PEMelectrolysis.jpg/220px-PEMelectrolysis.jpg",
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/PEMelectrolysis.jpg/220px"
+                    "-PEMelectrolysis.jpg",
             )
         ]
     )
@@ -141,7 +139,7 @@ def update_figure(selected_temperature, selected_wetting, selected_thickness):
     # Über 0-3 Ampere/cm^2 eine Berechnung mit 0.1 Schritten
     jarray = np.arange(0, 3, 0.01)
 
-    #Berechnung der verschiedenen Polarisations-Anteile
+    # Berechnung der verschiedenen Polarisations-Anteile
     Vohmicarray = ohmicpolarisation(jarray, selected_temperature, selected_wetting, selected_thickness)
     Vcellcarray = np.repeat(ecellvoltage(selected_temperature), jarray.size)
     anodeactivationpolarisationarray = anodeactivationpolarisation(jarray, selected_temperature)
@@ -150,9 +148,9 @@ def update_figure(selected_temperature, selected_wetting, selected_thickness):
     # Power Curve to implement
     # power = Ecell * i
 
-
     # Plotten erfolgt wie in folgendem Beispiel: https://plotly.com/python/filled-area-plots/
-    fig = px.area(x=jarray, y=[Vohmicarray, anodeactivationpolarisationarray, cathodeactivationpolarisationarray, Vcellcarray, ])
+    fig = px.area(x=jarray,
+                  y=[Vohmicarray, anodeactivationpolarisationarray, cathodeactivationpolarisationarray, Vcellcarray, ])
     newnames = {"wide_variable_0": "V_ohmic",
                 "wide_variable_1": "V_anode_act",
                 "wide_variable_2": "V_cathode_act",
@@ -180,7 +178,6 @@ def update_figure(selected_temperature, selected_wetting, selected_thickness):
 
 
 def ecellvoltage(T):
-
     """
     Recently only Temperature is considered, partial pressures are neglected
     pH2, pO2, pH2O is the partial pressure of reactants/products,
@@ -204,11 +201,14 @@ def anodeactivationpolarisation(i, T):
 
     Vaact = R * T / (ALPPHAA * F) * np.arcsinh(i / (2 * I0A))
     return Vaact
+
+
 def cathodeactivationpolarisation(i, T):
     # https://doi.org/10.1016/j.jclepro.2020.121184
     # Equation (16) Cathode part
     Vcact = R * T / (ALPHAC * F) * np.arcsinh(i / (2 * I0C))
     return Vcact
+
 
 def activationpolarisation(i, T):
     # https://doi.org/10.1016/j.jclepro.2020.121184
