@@ -96,7 +96,7 @@ app.layout = html.Div([
     dcc.Markdown('''
             #### Quellen:
             Falcão, D. S., & Pinto, A. M. F. R. (2020). A review on PEM Electrolyzer Modelling: guidelines for beginners. 
-            Journalof Cleaner Production, 121184. 
+            Journal of Cleaner Production, 121184. 
             https://doi.org/10.1016/j.jclepro.2020.121184
             
             Folgado, F. J., González, I., & Calderón, A. J. (2022). Simulation platform for the assessment of 
