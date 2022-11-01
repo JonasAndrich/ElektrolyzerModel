@@ -139,14 +139,18 @@ def update_figure(selected_temperature, selected_wetting, selected_thickness):
     Vohmicarray = ohmicpolarisation(jarray, selected_temperature, selected_wetting, selected_thickness)
     Vcellcarray = np.repeat(ecellvoltage(selected_temperature), jarray.size)
     activationpolarisationarray = activationpolarisation(jarray, selected_temperature)
+
+    anodeactivationpolarisationarray = anodeactivationpolarisation(jarray, selected_temperature)
+    cathodeactivationpolarisationarray = cathodeactivationpolarisation(jarray, selected_temperature)
     # do it like this: https://plotly.com/python/filled-area-plots/
 
     # power = Ecell * i
 
-    fig = px.area(x=jarray, y=[Vohmicarray, activationpolarisationarray, Vcellcarray, ])
+    fig = px.area(x=jarray, y=[Vohmicarray, anodeactivationpolarisationarray, cathodeactivationpolarisationarray, Vcellcarray, ])
     newnames = {"wide_variable_0": "V_ohmic",
-                "wide_variable_1": "V_act",
-                "wide_variable_2": "V_cell",
+                "wide_variable_1": "V_anode_act",
+                "wide_variable_2": "V_cathode_act",
+                "wide_variable_3": "V_cell",
                 }
 
     fig.for_each_trace(lambda t: t.update(name=newnames[t.name]))
@@ -187,6 +191,13 @@ def ecellvoltage(T):
     # + R * T / (2 * F) * np.log((pH2 * pO2 ** 0.5) / (pH2O))
     return E
 
+
+def anodeactivationpolarisation(i, T):
+    Vaact = R * T / (ALPPHAA * F) * np.arcsinh(i / (2 * I0A))
+    return Vaact
+def cathodeactivationpolarisation(i, T):
+    Vcact = R * T / (ALPHAC * F) * np.arcsinh(i / (2 * I0C))
+    return Vcact
 
 def activationpolarisation(i, T):
     # https://doi.org/10.1016/j.jclepro.2020.121184
