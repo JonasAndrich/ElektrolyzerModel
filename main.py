@@ -113,7 +113,11 @@ app.layout = html.Div([
             
             ''', style={'width': '100%', 'margin': 0, 'textAlign': 'left', 'font-family': 'Arial'}
                  ),
+    dcc.Markdown('''
+            #### Beispiel-Abbildung eines PEM-Elektrolyseurs von Wikipedia:
 
+            ''', style={'width': '100%', 'margin': 0, 'textAlign': 'left', 'font-family': 'Arial'}
+                 ),
 
     html.A(
         href ="https://en.wikipedia.org/wiki/Polymer_electrolyte_membrane_electrolysis",
