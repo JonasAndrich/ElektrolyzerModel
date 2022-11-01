@@ -115,15 +115,15 @@ app.layout = html.Div([
                  ),
 
 
-    # html.A(
-    #     href ="https://en.wikipedia.org/wiki/Polymer_electrolyte_membrane_electrolysis",
-    #     children=[
-    #         html.Img(
-    #             alt="Scheme of PEM Water Electrolysis Cell from Wikipedia",
-    #             src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/PEMelectrolysis.jpg/220px-PEMelectrolysis.jpg",
-    #         )
-    #     ]
-    # )
+    html.A(
+        href ="https://en.wikipedia.org/wiki/Polymer_electrolyte_membrane_electrolysis",
+        children=[
+            html.Img(
+                alt="Scheme of PEM Water Electrolysis Cell from Wikipedia",
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/PEMelectrolysis.jpg/220px-PEMelectrolysis.jpg",
+            )
+        ]
+    )
 ])
 
 
@@ -136,16 +136,18 @@ app.layout = html.Div([
 def update_figure(selected_temperature, selected_wetting, selected_thickness):
     # Über 0-3 Ampere/cm^2 eine Berechnung mit 0.1 Schritten
     jarray = np.arange(0, 3, 0.01)
+
+    #Berechnung der verschiedenen Polarisations-Anteile
     Vohmicarray = ohmicpolarisation(jarray, selected_temperature, selected_wetting, selected_thickness)
     Vcellcarray = np.repeat(ecellvoltage(selected_temperature), jarray.size)
-    activationpolarisationarray = activationpolarisation(jarray, selected_temperature)
-
     anodeactivationpolarisationarray = anodeactivationpolarisation(jarray, selected_temperature)
     cathodeactivationpolarisationarray = cathodeactivationpolarisation(jarray, selected_temperature)
-    # do it like this: https://plotly.com/python/filled-area-plots/
 
+    # Power Curve to implement
     # power = Ecell * i
 
+
+    # Plotten erfolgt wie in folgendem Beispiel: https://plotly.com/python/filled-area-plots/
     fig = px.area(x=jarray, y=[Vohmicarray, anodeactivationpolarisationarray, cathodeactivationpolarisationarray, Vcellcarray, ])
     newnames = {"wide_variable_0": "V_ohmic",
                 "wide_variable_1": "V_anode_act",
@@ -174,28 +176,33 @@ def update_figure(selected_temperature, selected_wetting, selected_thickness):
 
 
 def ecellvoltage(T):
-    # not implemented yet
-    # pH2, pO2, pH2O,
+
     """
     Recently only Temperature is considered, partial pressures are neglected
     pH2, pO2, pH2O is the partial pressure of reactants/products,
     T is the temperature in Kelvin, F is the Faraday constant and
     E0rev is the reversible cell potential at standard temperature and pressure. Tamb is ~ 298 K
     """
-    # From https://doi.org/10.1016/j.enconman.2022.115917 EQ 14
+
+    # From https://doi.org/10.1016/j.enconman.2022.115917
+    # Equation 14
     E0rev = 1.229 - 0.9 * 0.001 * (T - Tamb)
     E = E0rev
 
-    # Was sind die partiellen Drücke für die Fuel-Cell
-    # ignored for now
+    # Partielle Drücke aus Gleichung 14 für die Fuel-Cell bisher ignoriert
     # + R * T / (2 * F) * np.log((pH2 * pO2 ** 0.5) / (pH2O))
     return E
 
 
 def anodeactivationpolarisation(i, T):
+    # https://doi.org/10.1016/j.jclepro.2020.121184
+    # Equation (16) Anode part
+
     Vaact = R * T / (ALPPHAA * F) * np.arcsinh(i / (2 * I0A))
     return Vaact
 def cathodeactivationpolarisation(i, T):
+    # https://doi.org/10.1016/j.jclepro.2020.121184
+    # Equation (16) Cathode part
     Vcact = R * T / (ALPHAC * F) * np.arcsinh(i / (2 * I0C))
     return Vcact
 
@@ -207,7 +214,9 @@ def activationpolarisation(i, T):
 
 
 def ohmicpolarisation(i, T, lamdamembrane, membranethickness):
-    membraneconductivity = (0.00514 * lamdamembrane) * np.exp(1268 * (1 / 298 - 1 / T))
+    # https://doi.org/10.1016/j.jclepro.2020.121184
+    # Equation (23)
+    membraneconductivity = (0.00514 * lamdamembrane) * np.exp(1268 * (1 / 303 - 1 / T))
     Rohmic = membranethickness / membraneconductivity
     return Rohmic * i
 
